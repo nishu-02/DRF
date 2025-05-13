@@ -1,0 +1,3 @@
+venv/
+DRF/api/migrations
+DRF/DRF/__pycache__
