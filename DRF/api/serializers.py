@@ -22,15 +22,34 @@ class ProductSerializer(serializers.ModelSerializer):
         return value
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    # product = ProductSerializer()
+
+    # if we wish to flatten the data
+    product_name = serializers.CharField(source='product.name')
+    product_price = serializers.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        source='product.price'
+        )
     class Meta:
         model = OrderItem
         fields = (
-            'product',
+            # 'product',
+            'product_name',
+            'product_price',
             'quantity',
+            'item_subtotal',
         )
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True, read_only=True) # so we want this when we are fetching the orders not when creating one
+    # removing the realted_name return the primary key of the items
+
+    total_price = serializers.SerializerMethodField(method_name='total')
+
+    def total(self.obj):
+        order_items = obj.items.all()
+        return sum(order_item.item_subtotal for order_item in order_items)
     
     class Meta:
         model = Order
@@ -40,4 +59,5 @@ class OrderSerializer(serializers.ModelSerializer):
             'user', # It is the foreign key here
             'status',
             'items',
+            'total_price',
         )
