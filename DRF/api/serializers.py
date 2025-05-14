@@ -20,3 +20,24 @@ class ProductSerializer(serializers.ModelSerializer):
                 "Price must be greater than 0"
             )
         return value
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = (
+            'product',
+            'quantity',
+        )
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True) # so we want this when we are fetching the orders not when creating one
+    
+    class Meta:
+        model = Order
+        fields = (
+            'order_id',
+            'created_at',
+            'user', # It is the foreign key here
+            'status',
+            'items',
+        )
