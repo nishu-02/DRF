@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view # function based views
 
 # Create your views here.
 
-# so the interface we see on the broweser it is beacuse of the render classes in the DRF
+# so the interface we see on the browser it is beacuse of the render classes in the DRF
 
 @api_view(['GET'])
 def product_list(request):
@@ -24,7 +24,11 @@ def product_detail(request, pk):
 
 @api_view(['GET'])
 def Order_list(request):
-    orders = Order.objects.all()
+    # orders = Order.objects.all()
+    orders = Order.objects.prefetch_related(
+        'items',
+        'items_products'
+        ).all() # prefetch_related is used to optimize the query
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
