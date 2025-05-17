@@ -4,33 +4,45 @@ from api.serializers import ProductSerializer, OrderSerializer, OrderItemSeriali
 from api.models import Product, Order, OrderItem
 from rest_framework.response import Response # we pass the data
 from rest_framework.decorators import api_view # function based views
-
+from rest_framework import generics
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
 
-@api_view(['GET'])
-def product_list(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True) # Instantitate the Product serializer
-    return Response(serializer.data) # Performs content negotiation on its own
+# @api_view(['GET'])
+# def product_list(request):
+#     products = Product.objects.all()
+#     serializer = ProductSerializer(products, many=True) # Instantitate the Product serializer
+#     return Response(serializer.data) # Performs content negotiation on its own
 
+class ProductListAPIView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
-@api_view(['GET'])
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    serializer = ProductSerializer(product)
-    return Response(serializer.data)
+# @api_view(['GET'])
+# def product_detail(request, pk):
+#     product = get_object_or_404(Product, pk=pk)
+#     serializer = ProductSerializer(product)
+#     return Response(serializer.data)
 
-@api_view(['GET'])
-def Order_list(request):
-    # orders = Order.objects.all()
-    orders = Order.objects.prefetch_related(
-        'items',
-        'items_products'
-        ).all() # prefetch_related is used to optimize the query
-    serializer = OrderSerializer(orders, many=True)
-    return Response(serializer.data)
+class ProductDeatilAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_url_kwarg = 'product_id' # by default drf look for primary key in the url this is for the custom 
+
+# @api_view(['GET'])
+# def Order_list(request):
+#     # orders = Order.objects.all()
+#     orders = Order.objects.prefetch_related(
+#         'items',
+#         'items_products'
+#         ).all() # prefetch_related is used to optimize the query
+#     serializer = OrderSerializer(orders, many=True)
+#     return Response(serializer.data)
+
+class OrderListAPIView(generics.ListAPIView):
+    queryset = Order.objects.prefetch_related('items__product')
+    serializer_class = OrderSerializer
 
 @api_view(['GET'])
 def product_info(request):
