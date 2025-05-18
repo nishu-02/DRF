@@ -6,6 +6,7 @@ from rest_framework.response import Response # we pass the data
 from rest_framework.decorators import api_view # function based views
 from rest_framework import generics
 from rest_framework.persmissions import IsAuthenticated
+from rest_framework.views import APIView
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
@@ -55,12 +56,22 @@ class UserOrderListAPIView(generics.ListAPIView):
         qs = super().get_queryset() # or self.queryset basically it refers to the parent class method
         return qs.filter(user=user)
 
-@api_view(['GET'])
-def product_info(request):
-    products = Product.objects.all()
-    serializer = ProductInfoSerializer({
-        'products': products,
-        'count': len(products),
-        'max_prices': products.aggregate(max_price=Max('price'))['max_price'],
-    })
-    return Response(serializer.data)
+# @api_view(['GET'])
+# def product_info(request):
+#     products = Product.objects.all()
+#     serializer = ProductInfoSerializer({
+#         'products': products,
+#         'count': len(products),
+#         'max_prices': products.aggregate(max_price=Max('price'))['max_price'],
+#     })
+#     return Response(serializer.data)
+
+class ProductInfoAPIView(APIView):
+    def get(self. request):
+        products = Product.objects.all()
+        serializer = ProductInfoSerializer({
+            'products': products,
+            'count': len(products),
+            'max_prices': products.aggregate(max_price=Max('price'))['max_price'],
+        })
+        return Response(serializer.data)
