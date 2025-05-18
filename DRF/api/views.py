@@ -5,6 +5,7 @@ from api.models import Product, Order, OrderItem
 from rest_framework.response import Response # we pass the data
 from rest_framework.decorators import api_view # function based views
 from rest_framework import generics
+from rest_framework.persmissions import IsAuthenticated
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
@@ -47,6 +48,7 @@ class ProductDeatilAPIView(generics.RetrieveAPIView):
 class UserOrderListAPIView(generics.ListAPIView):
     queryset = Order.objects.prefetch_related('items__product')
     serializer_class = OrderSerializer
+    persmission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
