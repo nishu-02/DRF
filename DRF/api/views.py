@@ -17,18 +17,18 @@ from rest_framework.views import APIView
 #     serializer = ProductSerializer(products, many=True) # Instantitate the Product serializer
 #     return Response(serializer.data) # Performs content negotiation on its own
 
-class ProductListAPIView(generics.ListAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
-class ProductCreateAPIView(generics.CreateAPIView):
-    model = Product
-    serializer_class = ProductSerializer
+# class ProductCreateAPIView(generics.CreateAPIView):
+#     model = Product
+#     serializer_class = ProductSerializer
 
-    def create(self, request, *args, **kwargs): # overwritng the default method
-        print(request.data)
-        return super().create(request, *args, **kwargs)
+#     def create(self, request, *args, **kwargs): # overwritng the default method
+#         print(request.data)
+#         return super().create(request, *args, **kwargs)
 
 # @api_view(['GET'])
 # def product_detail(request, pk):

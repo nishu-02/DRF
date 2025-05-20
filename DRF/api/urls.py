@@ -3,9 +3,10 @@ from . import views
 
 urlpatterns = [
     # path('produdcts/', views.product_list),
-    path('products/', views.ProductListAPIView.as_view()),
+    # path('products/', views.ProductListAPIView.as_view()),
+    path('products/', views.ProductListCreateAPIView.as_view()), # the rest_framework convention is to have single end point for both the methods
 
-    path('products/create/', view.ProductCreateAPIView.as_view()), 
+    # path('products/create/', view.ProductCreateAPIView.as_view()), 
 
     # path('products/<int:pk>/', views.product_detail),
     path('products/<int:pk>/', views.ProductDeatilAPIView.as_view()),
