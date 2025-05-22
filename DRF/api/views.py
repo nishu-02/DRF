@@ -42,10 +42,16 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 #     serializer = ProductSerializer(product)
 #     return Response(serializer.data)
 
-class ProductDeatilAPIView(generics.RetrieveAPIView):
+class ProductDeatilAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_url_kwarg = 'product_id' # by default drf look for primary key in the url this is for the custom 
+
+    def get_permissions(self):
+        self.persmission_classes = [AllowAny]
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            self.persmission_classes == [IsAdminUser]
+        return super().get_permissions()
 
 # @api_view(['GET'])
 # def Order_list(request):
