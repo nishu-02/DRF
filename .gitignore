@@ -1,3 +1,4 @@
 venv/
 DRF/api/migrations
 DRF/DRF/__pycache__
+DRF/api/__pycache__

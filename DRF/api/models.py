@@ -6,11 +6,11 @@ import uuid
 class User(AbstractUser):
     pass
 
-class Product(models.Models):
+class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.PositiveInteferField()
+    stock = models.PositiveIntegerField()
     image = models.ImageField(upload_to='products/', blank=True, null=True)
 
     @property
@@ -47,7 +47,7 @@ class OrderItem(models.Model):
         related_name='items'
         )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveInteferField()
+    quantity = models.PositiveIntegerField()
 
     @property
     def item_subtotal(self):

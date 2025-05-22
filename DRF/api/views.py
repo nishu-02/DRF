@@ -5,7 +5,7 @@ from api.models import Product, Order, OrderItem
 from rest_framework.response import Response # we pass the data
 from rest_framework.decorators import api_view # function based views
 from rest_framework import generics
-from rest_framework.persmissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
 # Create your views here.
 
@@ -23,7 +23,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
     def get_permissions(self):
         self.persmission_classes = [AllowAny]
-        if self.request.method == 'POST'
+        if self.request.method == 'POST':
             self.persmission_classes == [IsAdminUser]
         return super().get_permissions
 
@@ -82,7 +82,7 @@ class UserOrderListAPIView(generics.ListAPIView):
 #     return Response(serializer.data)
 
 class ProductInfoAPIView(APIView):
-    def get(self. request):
+    def get(self, request):
         products = Product.objects.all()
         serializer = ProductInfoSerializer({
             'products': products,
