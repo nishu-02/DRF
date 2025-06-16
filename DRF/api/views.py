@@ -7,6 +7,8 @@ from rest_framework.decorators import api_view # function based views
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
+
+from api.filters import ProductFilter
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
@@ -20,7 +22,9 @@ from rest_framework.views import APIView
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    # filterset_fields = ('name', 'price') # this will work only for quality based filtering (exact equal)
+    filterset_fields = ProductFilter
+    
     def get_permissions(self):
         self.persmission_classes = [AllowAny]
         if self.request.method == 'POST':
