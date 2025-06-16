@@ -9,6 +9,9 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
 
 from api.filters import ProductFilter
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
@@ -25,6 +28,21 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     # filterset_fields = ('name', 'price') # this will work only for quality based filtering (exact equal)
     filterset_fields = ProductFilter
     
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    ]
+    
+    search_fields = [
+        '=name', """ with this = it will search for exact lookups """
+        'description',
+    ] # Case insensitive partial matching filter
+    ordering_fields= [
+        'name',
+        'price'
+    ]
+
     def get_permissions(self):
         self.persmission_classes = [AllowAny]
         if self.request.method == 'POST':

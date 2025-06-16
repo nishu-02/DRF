@@ -1,5 +1,5 @@
 import django_filters
-form api.models import Product
+from api.models import Product
 
 class ProductFilter(django_filters.FilterSet):
     class Meta:
