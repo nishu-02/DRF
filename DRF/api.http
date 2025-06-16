@@ -8,6 +8,7 @@ GET http://localhost:8000/api/products/1/ HTTP/1.1
 
 PUT http://localhost:8000/api/products/1/ HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer
 
 {
     "name": "New Television",
