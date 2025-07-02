@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from api.filters import ProductFilter, InStockFilterBackend
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 
 # Create your views here.
 
@@ -23,7 +24,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 #     return Response(serializer.data) # Performs content negotiation on its own
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.order_by('pk')
     serializer_class = ProductSerializer
     # filterset_fields = ('name', 'price') # this will work only for quality based filtering (exact equal)
     filterset_fields = ProductFilter
@@ -43,7 +44,16 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         'name',
         'price'
     ]
+    pagination_class = PageNumberPagination
+    pagination_class.page_size = 2 #The number of response on the single page or in short the page size
+    pagination_class.page_query_param = 'pagenum' 
 
+    # Allowing the client to control the number of response on each page -> there exist a size query parameter for this
+    pagination_class.max_page_size = 10
+
+    # Limitoffsetpagination
+    # pagination_class = LimitOffsetPagination #so it maps to we the one define in the settings
+    
     def get_permissions(self):
         self.persmission_classes = [AllowAny]
         if self.request.method == 'POST':

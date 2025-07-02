@@ -134,8 +134,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication', # by deafult it is the session based (and as a fallback method)
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-}
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],bv
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}   
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'E-Commerce API',
