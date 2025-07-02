@@ -4,15 +4,15 @@ from api.serializers import ProductSerializer, OrderSerializer, OrderItemSeriali
 from api.models import Product, Order, OrderItem
 from rest_framework.response import Response # we pass the data
 from rest_framework.decorators import api_view # function based views
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.views import APIView
 
-from api.filters import ProductFilter, InStockFilterBackend
+from api.filters import ProductFilter, InStockFilterBackend, OrderFilter
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
-
+from rest_framework.decorators import action
 # Create your views here.
 
 # so the interface we see on the browser it is beacuse of the render classes in the DRF
@@ -96,19 +96,35 @@ class ProductDeatilAPIView(generics.RetrieveUpdateDestroyAPIView):
 #     serializer = OrderSerializer(orders, many=True)
 #     return Response(serializer.data)
 
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.prefetch_related('items_product')
+    serializer_class = OrderSerializer
+    permission_class = [AllowAny]
+
+    # pagination_class = None # if we wish to disable the global pagination class
+    
+    filterset_class = OrderFilter
+    filter_backends = [DjnagoFilterBackend]
+
+    @action(detail=False, methods=['get'], url_path='user-orders', persmission_classes=[IsAuthenticated] #only if class has different method)
+    def user_orders(self, request):
+        orders = self.get_queryset().filter(user=request,user)
+        serializer = self.get_serializer(orders, many=True)
+        return Response(serailizer.data)
+
 # class OrderListAPIView(generics.ListAPIView): # generic view
 #     queryset = Order.objects.prefetch_related('items__product')
 #     serializer_class = OrderSerializer
 
-class UserOrderListAPIView(generics.ListAPIView):
-    queryset = Order.objects.prefetch_related('items__product')
-    serializer_class = OrderSerializer
-    persmission_classes = [IsAuthenticated]
+# class UserOrderListAPIView(generics.ListAPIView):
+#     queryset = Order.objects.prefetch_related('items__product')
+#     serializer_class = OrderSerializer
+#     persmission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        user = self.request.user
-        qs = super().get_queryset() # or self.queryset basically it refers to the parent class method
-        return qs.filter(user=user)
+#     def get_queryset(self):
+#         user = self.request.user
+#         qs = super().get_queryset() # or self.queryset basically it refers to the parent class method
+#         return qs.filter(user=user)
 
 # @api_view(['GET'])
 # def product_info(request):
