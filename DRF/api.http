@@ -56,3 +56,11 @@ Content-Type: application/json
 {
     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0ODAxMDQyNSwiaWF0IjoxNzQ3OTI0MDI1LCJqdGkiOiJlYWYzZmQ5MjBiNmQ0N2I3OWQ3ZjYxMzNhOWJlNGRiZSIsInVzZXJfaWQiOjF9.ELISja0Mge-uFK-imU0YMJXnTHfFw7DT0w8dDy1LBfQ"
 }
+
+###
+GET http://localhost:8000/api/orders/ HTTP/1.1
+Authorization: Bearer 
+
+###
+GET http://localhost:8000/api/orders/{order_id}/ HTTP/1.1
+Authorization: Bearer 

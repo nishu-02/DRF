@@ -106,12 +106,19 @@ class OrderViewSet(viewsets.ModelViewSet):
     filterset_class = OrderFilter
     filter_backends = [DjnagoFilterBackend]
 
-    @action(detail=False, methods=['get'], url_path='user-orders', persmission_classes=[IsAuthenticated] #only if class has different method)
-    def user_orders(self, request):
-        orders = self.get_queryset().filter(user=request,user)
-        serializer = self.get_serializer(orders, many=True)
-        return Response(serailizer.data)
+    def queryset(self):
+        qs = super().get_queryset()
+        if not request.user.is_staff:
+            qs = qs.filter(user=self.request.user)
+        return qs
 
+    # @action(detail=False, methods=['get'], url_path='user-orders', persmission_classes=[IsAuthenticated] #only if class has different method
+    # )
+    # def user_orders(self, request):
+    #     orders = self.get_queryset().filter(user=request,user)
+    #     serializer = self.get_serializer(orders, many=True)
+    #     return Response(serailizer.data) -> No longer needed as the queryset method is overridden and it return the filtered queryset
+    
 # class OrderListAPIView(generics.ListAPIView): # generic view
 #     queryset = Order.objects.prefetch_related('items__product')
 #     serializer_class = OrderSerializer
